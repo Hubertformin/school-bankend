@@ -1,48 +1,22 @@
 const {Router} = require('express');
 const fs = require('fs');
 const short = require('short-uuid');
-const {convertCSVToObject} = require('../utils/index')
+const {convertCSVToJSON} = require('../utils/index');
+const { getAllUsers, getUserById, updateUser, deleteUser } = require('../utils/user.utilts');
 
 const router = Router();
 
 router.get('/', async (req, res) => {
-    //  Here we are reading user's data from the file
-    const fileData = fs.readFileSync("users.csv").toString();
-    // /**
-    //  * Convert the file data to an array using the new line character as delimiter
-    //  */
-    // const fileDataArray = fileData.split("\n");
-    // /**
-    //  * Now we get the header form the csv file, to be used to create objects
-    //  */
-    // const keys = fileDataArray[0].split(',').map(k => k.toLowerCase());
-    // /**
-    //  * Filter the data by removing empty string, since empty string
-    //  * are not valid data...
-    //  * 
-    //  */
-    // const usersData = fileDataArray.slice(1);
-    // /**
-    //  * Filter return an array with the  elements that pass a condition
-    //  */
-    // let usersStrings = usersData.filter(userString => Boolean(userString));
 
-    // const users = usersStrings.map((userString) => {
-    //     // userString = "8Kgb3uUpKGKpvirY2zm9GV,Tumasang Ndeh,tumasang.ndeh@gmail.com,24"
-    //     const fields = userString.split(",");
-    //     // fields = [ '8Kgb3uUpKGKpvirY2zm9GV', 'Tumasang Ndeh', 'tumasang.ndeh@gmail.com', '24']
-    //     let userObj = {};
-    //     // keys = [ 'id', 'name', 'email', 'age' ]
-    //     keys.forEach((key, index) => {
-    //         // ('id', 0)
-    //         userObj[key] = fields[index];
-    //     })
-    //     return userObj;
-    // });
-
-    const users = convertCSVToObject(fileData)
-
+    const users = getAllUsers();
+ 
     res.status(200).json({data: users})
+});
+
+
+router.get('/:userId', async (req, res) => {
+    const user = getUserById(req.params.userId);
+    res.status(200).json({ user });
 });
 
 router.post('/', async (req, res) => {
@@ -58,13 +32,24 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.get('/:userId', async (req, res) => {
+// Update user
+router.put('/:userId', async (req, res) => {
+    const userData = req.body;
+    const userId = req.params.userId;
+
+    updateUser(userId, userData);
+
+    res.status(200).json({message: "User was updated"})
 
 });
 
+// Delete user
+router.delete('/:userId', async (req, res) => {
+    const userId = req.params.userId;
 
-router.get('/userId', async (req, res) => {
+    deleteUser(userId);
 
+    res.status(200).json({message: "User was deleted"})
 });
 
 module.exports = router;

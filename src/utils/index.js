@@ -1,5 +1,5 @@
 
-function convertCSVToObject(csv) {
+function convertCSVTOJSON(csv) {
     /**
      * Convert the file data to an array using the new line character as delimiter
      */
@@ -33,4 +33,4 @@ function convertCSVToObject(csv) {
     });
 }
 
-module.exports = { convertCSVToObject }
+module.exports = { convertCSVTOJSON }

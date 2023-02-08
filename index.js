@@ -3,6 +3,7 @@ const bodyParser = require("body-parser")
 const fs = require('fs');
 
 const userRouter = require('./src/routes/user.routes')
+const levelsRouter = require('./src/routes/levels.route');
 
 // Check if database file exist
 // If it doesn't create a new one
@@ -21,6 +22,7 @@ app.use(bodyParser.json())
 
 // Initalize routes
 app.use('/users', userRouter);
+app.use('/levels', levelsRouter);
 
 app.get('/', (req, res) => {
     res.json({message: "This is a School management API"})
